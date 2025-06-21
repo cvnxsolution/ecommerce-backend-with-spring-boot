@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: 'mysql:8.0.42-debian'
+    environment:
+      - 'MYSQL_DATABASE=ecommerce'
+      - 'MYSQL_PASSWORD=root'
+      - 'MYSQL_ROOT_PASSWORD=root'
+      - 'MYSQL_USER=cvnxsolution'
+    ports:
+      - '3306:3306'
+    volumes:
+      - 'ecommerce-project-spring-boot:/var/lib/mysql'
+
+volumes:
+  'ecommerce-project-spring-boot':
