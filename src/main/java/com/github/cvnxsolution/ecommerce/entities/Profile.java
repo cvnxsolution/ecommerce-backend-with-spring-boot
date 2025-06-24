@@ -16,7 +16,6 @@ import java.sql.Date;
 public class Profile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -32,7 +31,7 @@ public class Profile {
     @Column(name = "loyalty_points")
     private Byte loyaltyPoints;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     @MapsId
     private User user;
