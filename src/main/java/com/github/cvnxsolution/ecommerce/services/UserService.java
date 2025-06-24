@@ -1,13 +1,17 @@
 package com.github.cvnxsolution.ecommerce.services;
 
 import com.github.cvnxsolution.ecommerce.entities.Address;
+import com.github.cvnxsolution.ecommerce.entities.Product;
 import com.github.cvnxsolution.ecommerce.entities.User;
 import com.github.cvnxsolution.ecommerce.repositories.AddressRepository;
 import com.github.cvnxsolution.ecommerce.repositories.ProductRepository;
 import com.github.cvnxsolution.ecommerce.repositories.ProfileRepository;
 import com.github.cvnxsolution.ecommerce.repositories.UserRepository;
+import com.github.cvnxsolution.ecommerce.repositories.specifications.ProductSpec;
+import com.github.cvnxsolution.ecommerce.repositories.specifications.UserSpec;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -57,6 +61,37 @@ public class UserService {
     public void findLoyals(){
         var users = userRepository.findLoyalUsers((byte) 0);
         users.forEach(System.out::println);
+    }
+
+
+    public void findProductBySpecifications(String name, BigDecimal minPrice, BigDecimal maxPrice){
+        Specification<Product> spec = Specification.where(null);
+        if(name != null){
+            spec = spec.and(ProductSpec.hasName(name));
+        }
+
+        if(minPrice != null){
+            spec = spec.and(ProductSpec.hasPriceLessThanOrEqualTo(minPrice));
+        }
+
+        if(maxPrice != null){
+            spec = spec.and(ProductSpec.hasPriceGreaterThanOrEqualTo(maxPrice));
+        }
+
+        productRepository.findAll(spec).forEach(System.out::println);
+    }
+
+
+    public void findUsersBySpecifications(String name, String email){
+        Specification<User> spec = Specification.where(null);
+        if(name != null){
+            spec = spec.and(UserSpec.hasName(name));
+        }
+        if(email != null){
+            spec = spec.and(UserSpec.hasEmail(email));
+        }
+
+        userRepository.findAll(spec);
     }
 
 
