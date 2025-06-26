@@ -1,19 +1,19 @@
 package com.github.cvnxsolution.ecommerce.entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@ToString
 @Table(name = "users")
 public class User {
     @Id
@@ -30,16 +30,40 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
-    @JoinTable(name = "users_tags", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @Builder.Default
-    private Set<Address> addresses = new HashSet<>();
+    private List<Address> addresses = new ArrayList<>();
 
-    public void addAddress(Address address){
+    public void addAddress(Address address) {
         addresses.add(address);
-        address.addUser(this);
+        address.setUser(this);
+    }
+
+    public void removeAddress(Address address) {
+        addresses.remove(address);
+        address.setUser(null);
+    }
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Profile profile;
+
+    @ManyToMany
+    @JoinTable(
+        name = "wishlist",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> favoriteProducts = new HashSet<>();
+
+    public void addFavoriteProduct(Product product) {
+        favoriteProducts.add(product);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
     }
 }

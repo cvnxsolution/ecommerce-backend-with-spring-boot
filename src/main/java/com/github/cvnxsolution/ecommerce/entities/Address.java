@@ -1,27 +1,20 @@
 package com.github.cvnxsolution.ecommerce.entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
-
-@Getter
-@Setter
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "addresses")
 public class Address {
-
-    public Address(Long id){
-        this.id = id;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "street")
@@ -30,22 +23,14 @@ public class Address {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "state")
-    private String state;
-
     @Column(name = "zip")
     private String zip;
 
-    @ManyToOne
+    @Column(name = "state")
+    private String state;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
-
-    public void addUser(User user){
-        this.user = user;
-    }
-
-    public void removeUser(){
-        this.user = null;
-    }
 }

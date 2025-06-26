@@ -3,18 +3,17 @@ package com.github.cvnxsolution.ecommerce.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "profiles")
 public class Profile {
-
     @Id
     @Column(name = "id")
     private Long id;
@@ -26,12 +25,12 @@ public class Profile {
     private String phoneNumber;
 
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "loyalty_points")
-    private Byte loyaltyPoints;
+    private Integer loyaltyPoints;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     @MapsId
     private User user;
